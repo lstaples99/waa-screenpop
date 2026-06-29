@@ -347,9 +347,9 @@
 
       if (remaining <= 0) {
         clearInterval(countdownTimer);
-        setBadge('redirecting', 'Opening Freshdesk…');
+        setBadge('redirecting', 'Opening Agent Desktop…');
         countdownText.textContent = 'Opening…';
-        window.open(url, '_blank');
+        window.location.href = url;
       }
     }, 80);
   }
