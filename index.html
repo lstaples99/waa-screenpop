@@ -260,8 +260,9 @@
 </div>
 
 <script>
-  const FRESHDESK    = 'https://wreathsacrossamerica.freshdesk.com';
-  const MAKE_WEBHOOK = 'https://hook.us2.make.com/xn86l8acs56aqm3lde7j4xsgpierjvfg';
+  const FRESHDESK     = 'https://wreathsacrossamerica.freshdesk.com';
+  const AGENT_DESKTOP = 'https://waa-agent-desktop.vercel.app';
+  const MAKE_WEBHOOK  = 'https://hook.us2.make.com/xn86l8acs56aqm3lde7j4xsgpierjvfg';
   const COUNTDOWN_SEC = 4;
 
   const params       = new URLSearchParams(window.location.search);
@@ -300,13 +301,15 @@
     return num;
   }
 
-  const searchURL     = `${FRESHDESK}/a/contacts?filter=all&q=${encodeURIComponent(phone)}`;
+  const agentDesktopURL = phone
+    ? `${AGENT_DESKTOP}/?phone=${encodeURIComponent(phone)}&engagement_id=${encodeURIComponent(engagementId)}`
+    : AGENT_DESKTOP;
   const newContactURL = `${FRESHDESK}/a/contacts/new?mobile=${encodeURIComponent(phone)}`;
 
   if (phone) {
-    setBadge('searching', 'Preparing Freshdesk search…');
-    renderActions(searchURL, newContactURL);
-    startCountdown(searchURL);
+    setBadge('searching', 'Opening Agent Desktop…');
+    renderActions(agentDesktopURL, newContactURL);
+    startCountdown(agentDesktopURL);
   } else {
     setBadge('notfound', 'No caller number in this event');
     renderActions(null, newContactURL);
@@ -319,7 +322,7 @@
   function renderActions(searchUrl, newUrl) {
     let html = '';
     if (searchUrl) {
-      html += `<a class="btn btn-primary" href="${searchUrl}" target="_blank">Open in Freshdesk</a>`;
+      html += `<a class="btn btn-primary" href="${searchUrl}" target="_blank">Open Agent Desktop</a>`;
     }
     html += `<a class="btn btn-secondary" href="${newUrl}" target="_blank">Create New Contact</a>`;
     actionsEl.innerHTML = html;
@@ -340,7 +343,7 @@
       const pct = (remaining / total) * 100;
       countdownFill.style.width = pct + '%';
       const secs = Math.ceil(remaining / 1000);
-      countdownText.textContent = `Opening Freshdesk in ${secs}s…`;
+      countdownText.textContent = `Opening Agent Desktop in ${secs}s…`;
 
       if (remaining <= 0) {
         clearInterval(countdownTimer);
